@@ -1,1 +1,20 @@
-echo "Hello World"
+name: Manual Trigger Example
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 'Message to print'
+        required: true
+        default: 'Hello from GitHub Actions!'
+
+jobs:
+  print_message:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Print the message
+        run: echo "${{ github.event.inputs.message }}"
