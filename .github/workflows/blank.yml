@@ -1,10 +1,7 @@
 name: Capture JSON Output Example
 
 on:
-  push:
-    branches:
-      - main
-
+   workflow_dispatch:
 jobs:
   capture_json:
     runs-on: ubuntu-latest
