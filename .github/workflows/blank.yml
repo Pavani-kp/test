@@ -25,11 +25,6 @@ jobs:
           # Set the JSON output as an environment variable for later steps
           echo "JSON_OUTPUT=$json_output" >> $GITHUB_ENV
 
-      - name: Read and display JSON output
-        run: |
-          echo "Captured JSON:"
-          cat output.json
-
       - name: Process JSON output in a subsequent step
         run: |
           # Read the JSON from the environment variable and use jq to parse it
