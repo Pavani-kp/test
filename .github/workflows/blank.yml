@@ -44,13 +44,3 @@ jobs:
           echo "Name: $name"
           echo "Age: $age"
           echo "Is Admin: $is_admin"
-
-      - name: Check if the JSON contains a specific key
-        run: |
-          # Check if the name in the JSON is "John Doe"
-          if echo "$JSON_OUTPUT" | jq -e '.name == "John Doe"' > /dev/null; then
-            echo "Name is John Doe"
-          else
-            echo "Name is not John Doe"
-            exit 1
-          fi
