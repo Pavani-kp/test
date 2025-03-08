@@ -1,25 +1,59 @@
-name: Manual Trigger Example
+name: Capture JSON Output Example
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+
 jobs:
-  send_message_to_teams:
-      runs-on: windows-latest
-      steps:
-      - name: Step1
-        id: step1
-        run: >-
-          echo "::set-output name=TESTURL::$(
-          '{ "name": "test-name","test-url": "https://github.com"}')"
-      - name: step2
-        id: step2
+  capture_json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Generate JSON output
+        id: generate_json
         run: |
-          #Convert json to powershell
-          $json_object = "${{steps.step1.outputs.TESTURL }}" | ConvertFrom-Json
-
-          #Use jq to extract the value
-          $key_value=$json_object."test-url"
-
-          #Print the retrieved value
-          echo "retrieved value: $key_value"
+          # Generate some JSON output using a shell command
+          json_output=$(echo '{"name": "John Doe", "age": 30, "is_admin": true}')
           
+          # Output the JSON to the console (just for logging)
+          echo "Generated JSON: $json_output"
+          
+          # Save the JSON output to a file using tee
+          echo "$json_output" | tee output.json
+
+          # Set the JSON output as an environment variable for later steps
+          echo "JSON_OUTPUT=$json_output" >> $GITHUB_ENV
+
+      - name: Read and display JSON output
+        run: |
+          echo "Captured JSON:"
+          cat output.json
+
+      - name: Process JSON output in a subsequent step
+        run: |
+          # Read the JSON from the environment variable and use jq to parse it
+          echo "Processing JSON..."
+          
+          # Example of using jq to extract values from the JSON
+          name=$(echo "$JSON_OUTPUT" | jq -r '.name')
+          age=$(echo "$JSON_OUTPUT" | jq -r '.age')
+          is_admin=$(echo "$JSON_OUTPUT" | jq -r '.is_admin')
+
+          # Display extracted values
+          echo "Name: $name"
+          echo "Age: $age"
+          echo "Is Admin: $is_admin"
+
+      - name: Check if the JSON contains a specific key
+        run: |
+          # Check if the name in the JSON is "John Doe"
+          if echo "$JSON_OUTPUT" | jq -e '.name == "John Doe"' > /dev/null; then
+            echo "Name is John Doe"
+          else
+            echo "Name is not John Doe"
+            exit 1
+          fi
