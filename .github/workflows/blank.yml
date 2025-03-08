@@ -2,19 +2,24 @@ name: Manual Trigger Example
 
 on:
   workflow_dispatch:
-    inputs:
-      message:
-        description: 'Message to print'
-        required: true
-        default: 'Hello from GitHub Actions!'
-
 jobs:
-  print_message:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+  send_message_to_teams:
+      runs-on: windows-latest
+      steps:
+      - name: Step1
+        id: step1
+        run: >-
+          echo "::set-output name=TESTURL::$(
+          '{ "name": "test-name","test-url": "https://github.com"}')"
+      - name: step2
+        id: step2
+        run: |
+          #Convert json to powershell
+          $json_object = ${{steps.step1.outputs.TESTURL }} | ConvertFrom-Json
 
-      - name: Print the message
-        run: echo "${{ github.event.inputs.message }}"
+          #Use jq to extract the value
+          $key_value=$json_object."test-url"
+
+          #Print the retrieved value
+          echo "retrieved value: $key_value"
+          
