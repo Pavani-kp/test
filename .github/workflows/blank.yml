@@ -1,39 +1,70 @@
-name: Capture JSON Output Example
+name: Capture Timestamp in JSON Example
 
 on:
-   workflow_dispatch:
+  push:
+    branches:
+      - main
+
 jobs:
-  capture_json:
-    runs-on: windows-latest
+  capture_timestamp:
+    runs-on: windows-latest  # This uses the Windows runner
 
     steps:
-      - name: Generate JSON output
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Generate JSON with timestamp (Windows)
         id: generate_json
         run: |
-          $timestamp=$(date --utc +%Y-%m-%dT%H:%M:%SZ)
-          # Generate some JSON output using a shell command
-          $json_output=$(echo '{"name": "John Doe", "age": 30, "datetime": $timestamp}')
-          
-          # Output the JSON to the console (just for logging)
-          echo "Generated JSON: $json_output"
-          
-          # Save the JSON output to a file using tee
-          echo "$json_output" | tee output.json
+          # PowerShell script to generate the timestamp in ISO 8601 format (UTC)
+          $timestamp = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ").ToString()
 
-          # Set the JSON output as an environment variable for later steps
-          echo "JSON_OUTPUT=$json_output" >> $GITHUB_ENV
+          # Create the JSON object with the timestamp and other data
+          $json_output = @{
+            "name" = "John Doe"
+            "age" = 30
+            "is_admin" = $true
+            "timestamp" = $timestamp
+          } | ConvertTo-Json
 
-      - name: Process JSON output in a subsequent step
+          # Display the generated JSON (for debugging)
+          Write-Host "Generated JSON: $json_output"
+
+          # Optionally, save the JSON to a file
+          $json_output | Out-File -FilePath generated_output.json
+
+          # Set the JSON as an output variable for later steps
+          echo "::set-output name=json_output::$json_output"
+
+      - name: Display the generated JSON
         run: |
-          # Read the JSON from the environment variable and use jq to parse it
-          echo "Processing JSON..."
-          
-          # Example of using jq to extract values from the JSON
-          $name=$(echo "$JSON_OUTPUT" | jq -r '.name')
-          $age=$(echo "$JSON_OUTPUT" | jq -r '.age')
-          $datetime=$(echo "$JSON_OUTPUT" | jq -r '.datetime')
+          echo "Captured JSON output from the previous step:"
+          type generated_output.json
+
+      - name: Process the JSON output (Windows)
+        run: |
+          # Retrieve the generated JSON output
+          $json_output = "${{ steps.generate_json.outputs.json_output }}"
+
+          # Use PowerShell to parse and extract values from the JSON
+          $json = $json_output | ConvertFrom-Json
+          $name = $json.name
+          $age = $json.age
+          $is_admin = $json.is_admin
+          $timestamp = $json.timestamp
 
           # Display extracted values
-          echo "Name: $name"
-          echo "Age: $age"
-          echo "Is Admin: $datetime"
+          Write-Host "Name: $name"
+          Write-Host "Age: $age"
+          Write-Host "Is Admin: $is_admin"
+          Write-Host "Timestamp: $timestamp"
+
+      - name: Check if the JSON contains a specific key (Windows)
+        run: |
+          # Check if the "timestamp" key exists in the JSON
+          if ($json.timestamp -ne $null) {
+            Write-Host "The timestamp key exists in the JSON."
+          } else {
+            Write-Host "The timestamp key does not exist."
+            exit 1
+          }
