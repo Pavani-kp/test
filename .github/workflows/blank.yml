@@ -4,7 +4,7 @@ on:
    workflow_dispatch:
 jobs:
   capture_json:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Generate JSON output
