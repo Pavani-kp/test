@@ -1,10 +1,7 @@
 name: Capture Timestamp in JSON Example
 
 on:
-  push:
-    branches:
-      - main
-
+  workflow_dispatch:
 jobs:
   capture_timestamp:
     runs-on: windows-latest  # This uses the Windows runner
