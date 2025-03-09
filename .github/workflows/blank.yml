@@ -10,9 +10,9 @@ jobs:
       - name: Generate JSON output
         id: generate_json
         run: |
-          timestamp=$(date --utc +%Y-%m-%dT%H:%M:%SZ)
+          $timestamp=$(date --utc +%Y-%m-%dT%H:%M:%SZ)
           # Generate some JSON output using a shell command
-          json_output=$(echo '{"name": "John Doe", "age": 30, "datetime": $timestamp}')
+          $json_output=$(echo '{"name": "John Doe", "age": 30, "datetime": $timestamp}')
           
           # Output the JSON to the console (just for logging)
           echo "Generated JSON: $json_output"
@@ -29,9 +29,9 @@ jobs:
           echo "Processing JSON..."
           
           # Example of using jq to extract values from the JSON
-          name=$(echo "$JSON_OUTPUT" | jq -r '.name')
-          age=$(echo "$JSON_OUTPUT" | jq -r '.age')
-          datetime=$(echo "$JSON_OUTPUT" | jq -r '.datetime')
+          $name=$(echo "$JSON_OUTPUT" | jq -r '.name')
+          $age=$(echo "$JSON_OUTPUT" | jq -r '.age')
+          $datetime=$(echo "$JSON_OUTPUT" | jq -r '.datetime')
 
           # Display extracted values
           echo "Name: $name"
