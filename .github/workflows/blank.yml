@@ -1,67 +1,54 @@
-name: Capture Timestamp in JSON Example
+name: Run Tests and Extract Allure Summary (Windows)
 
 on:
   workflow_dispatch:
+
 jobs:
-  capture_timestamp:
-    runs-on: windows-latest  # This uses the Windows runner
+  allure-report:
+    runs-on: windows-latest  # Use a Windows runner
 
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Generate JSON with timestamp (Windows)
-        id: generate_json
+      # Step 2: Set up Python (if using pytest for tests)
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      # Step 3: Install dependencies (e.g., pytest, allure-pytest)
+      - name: Install dependencies
         run: |
-          # PowerShell script to generate the timestamp in ISO 8601 format (UTC)
-          $timestamp = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ").ToString()
+          python -m pip install --upgrade pip
+          pip install pytest allure-pytest
 
-          # Create the JSON object with the timestamp and other data
-          $json_output = @{
-            "name" = "John Doe"
-            "age" = 30
-            "is_admin" = $true
-            "timestamp" = $timestamp
-          } | ConvertTo-Json
-
-          # Display the generated JSON (for debugging)
-          Write-Host "Generated JSON: $json_output"
-
-          # Optionally, save the JSON to a file
-          $json_output | Out-File -FilePath generated_output.json
-
-          # Set the JSON as an output variable for later steps
-          echo "::set-output name=json_output::$json_output"
-
-      - name: Display the generated JSON
+      # Step 4: Run tests with pytest and generate Allure results
+      - name: Run tests with pytest and generate Allure results
         run: |
-          echo "Captured JSON output from the previous step:"
-          type generated_output.json
+          pytest --alluredir=allure-results  # Specify the directory where results will be saved
 
-      - name: Process the JSON output (Windows)
+      # Step 5: Install Allure command-line tool (for Windows)
+      - name: Install Allure command-line tool
         run: |
-          # Retrieve the generated JSON output
-          $json_output = "${{ steps.generate_json.outputs.json_output }}"
+          Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/2.13.8/allure-2.13.8.zip" -OutFile "allure.zip"
+          Expand-Archive -Path allure.zip -DestinationPath allure
+          $env:Path += ";$PWD\allure\bin"  # Add allure to PATH for the current session
 
-          # Use PowerShell to parse and extract values from the JSON
-          $json = $json_output | ConvertFrom-Json
-          $name = $json.name
-          $age = $json.age
-          $is_admin = $json.is_admin
-          $timestamp = $json.timestamp
-
-          # Display extracted values
-          Write-Host "Name: $name"
-          Write-Host "Age: $age"
-          Write-Host "Is Admin: $is_admin"
-          Write-Host "Timestamp: $timestamp"
-
-      - name: Check if the JSON contains a specific key (Windows)
+      # Step 6: Generate the Allure report from the results
+      - name: Generate Allure report
         run: |
-          # Check if the "timestamp" key exists in the JSON
-          if ($json.timestamp -ne $null) {
-            Write-Host "The timestamp key exists in the JSON."
-          } else {
-            Write-Host "The timestamp key does not exist."
-            exit 1
-          }
+          allure generate allure-results --clean --output allure-report
+
+      # Step 7: Extract summary from the Allure report data.json file
+      - name: Extract Allure report summary
+        run: |
+          # Use PowerShell to parse the summary from the data.json file
+          $json = Get-Content -Path "allure-report\data.json" | ConvertFrom-Json
+          $summary = $json.summary
+          Write-Host "Allure Test Summary:"
+          Write-Host "Passed: $($summary.passed)"
+          Write-Host "Failed: $($summary.failed)"
+          Write-Host "Skipped: $($summary.skipped)"
+          Write-Host "Total: $($summary.total)"
