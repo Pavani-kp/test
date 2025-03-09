@@ -11,7 +11,7 @@ jobs:
         id: generate_json
         run: |
           # Generate some JSON output using a shell command
-          json_output=$(echo '{"name": "John Doe", "age": 30, "datetime": $(date --utc +%Y-%m-%dT%H:%M:%SZ)}')
+          json_output=$(echo '{"name": "John Doe", "age": 30, "datetime": "$(date --utc +%Y-%m-%dT%H:%M:%SZ)"}')
           
           # Output the JSON to the console (just for logging)
           echo "Generated JSON: $json_output"
