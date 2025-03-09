@@ -30,13 +30,15 @@ jobs:
         run: |
           pytest --alluredir=allure-results  # Specify the directory where results will be saved
 
-      # Step 5: Install Allure command-line tool (for Windows)
-      - name: Install Allure command-line tool
+      - name: Install Allure command line tool
         run: |
-          Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/2.13.8/allure-2.13.8.zip" -OutFile "allure.zip"
-          Expand-Archive -Path allure.zip -DestinationPath allure
-          $env:Path += ";$PWD\allure\bin"  # Add allure to PATH for the current session
-
+          # Download Allure command line tool
+          wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.15.0/allure-commandline-2.15.0.tgz
+          tar -xvzf allure-commandline-2.15.0.tgz
+          sudo mv allure-2.15.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure  # Link allure to make it globally accessible
+          # Verify if Allure is accessible
+          allure --version
       # Step 6: Generate the Allure report from the results
       - name: Generate Allure report
         run: |
