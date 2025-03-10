@@ -30,6 +30,9 @@ jobs:
          Set-ExecutionPolicy RemoteSigned -scope CurrentUser
          iwr -useb get.scoop.sh | iex
          scoop install allure 
+          $allureInstallPath = "${PWD}/allure/allure-2.33.0/bin"
+         echo "Allure is installed at: $allureInstallPath"  # Print the Allure installation path
+      
          # Add Allure to the system PATH for the session using a GitHub Actions syntax
          echo "ALLURE_PATH=${PWD}/allure/allure-2.33.0/bin" >> $GITHUB_ENV
          # Print the current PATH to verify if Allure was added correctly
