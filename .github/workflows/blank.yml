@@ -36,7 +36,7 @@ jobs:
          iwr -useb get.scoop.sh | iex
          scoop install allure 
          # Add Allure to the system PATH
-         echo "::add-path::${PWD}\\allure\\allure-2.33.0\\bin"
+         echo "##[add-path]${PWD}/allure/allure-2.33.0/bin"
          allure --version
          
       # Step 6: Generate the Allure report from the results
