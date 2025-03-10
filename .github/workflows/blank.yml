@@ -30,17 +30,13 @@ jobs:
         run: |
           pytest --alluredir=allure-results  # Specify the directory where results will be saved
 
-      - name: Install Allure command line tool
+      - name: Install Scoop
         run: |
-         # Download Allure command line tool
-         Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/2.15.0/allure-commandline-2.15.0.zip" -OutFile "allure.zip"
-         # Unzip the downloaded file
-         Expand-Archive -Path allure.zip -DestinationPath allure
-         # Add Allure to the system PATH
-         $env:Path += ";${PWD}\allure\allure-2.15.0\bin"
-         # Verify if Allure is accessible
+         Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+         iwr -useb get.scoop.sh | iex
+         scoop install allure 
          allure --version
-        
+         
       # Step 6: Generate the Allure report from the results
       - name: Generate Allure report
         run: |
