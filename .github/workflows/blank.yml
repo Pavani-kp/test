@@ -38,11 +38,9 @@ jobs:
          # Print the current PATH to verify if Allure was added correctly
          echo "Current PATH: $env:Path"
          allure --version
-      - name: Print PATH variable (Debugging step)
+      - name: Print last part of PATH
         run: |
-         echo "Checking the PATH in the next step"
-         echo $env:Path
-      # Step 4: Run tests with pytest and generate Allure results
+           echo $env:PATH | Select-String -Pattern "allure"# Step 4: Run tests with pytest and generate Allure results
       - name: Run tests with pytest and generate Allure results
         run: |
           pytest --alluredir=allure-results  # Specify the directory where results will be saved
