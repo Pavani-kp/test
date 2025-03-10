@@ -30,8 +30,11 @@ jobs:
          Set-ExecutionPolicy RemoteSigned -scope CurrentUser
          iwr -useb get.scoop.sh | iex
          scoop install allure 
-         # Append Allure to the system PATH for this session using PowerShell
-         $env:Path += ";${PWD}\allure\allure-2.33.0\bin"
+         # Set the Allure bin folder to the system path
+         $allurePath = "${PWD}\allure\allure-2.33.0\bin"
+         $env:Path += ";$allurePath"
+         # Print the current PATH to verify if Allure was added correctly
+         echo "Current PATH: $env:Path"
          allure --version
      
       # Step 4: Run tests with pytest and generate Allure results
