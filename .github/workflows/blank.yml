@@ -34,7 +34,7 @@ jobs:
          echo "Allure is installed at: $allureInstallPath"  # Print the Allure installation path
       
          # Add Allure to the system PATH for the session using a GitHub Actions syntax
-         echo "ALLURE_PATH=${PWD}/allure/allure-2.33.0/bin" >> $GITHUB_ENV
+         echo "ALLURE_PATH=${PWD}\allure\allure-2.33.0\bin" >> $GITHUB_ENV
          # Print the current PATH to verify if Allure was added correctly
          echo "Current PATH: $env:Path"
          allure --version
