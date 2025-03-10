@@ -31,7 +31,7 @@ jobs:
          iwr -useb get.scoop.sh | iex
          scoop install allure 
          echo $env:PATH 
-         C:\Users\runneradmin\scoop\apps\allure\<version>\bin\allure.bat --version
+         C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat --version
         
       - name: Run tests with pytest and generate Allure results
         run: |
