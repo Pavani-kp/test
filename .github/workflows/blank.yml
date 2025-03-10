@@ -25,11 +25,6 @@ jobs:
           pip install pytest allure-pytest
           pip install -r requirements.txt
 
-      # Step 4: Run tests with pytest and generate Allure results
-      - name: Run tests with pytest and generate Allure results
-        run: |
-          pytest --alluredir=allure-results  # Specify the directory where results will be saved
-
       - name: Install Scoop
         run: |
          Set-ExecutionPolicy RemoteSigned -scope CurrentUser
@@ -38,6 +33,11 @@ jobs:
          # Append Allure to the system PATH for this session using PowerShell
          $env:Path += ";${PWD}\allure\allure-2.33.0\bin"
          allure --version
+     
+      # Step 4: Run tests with pytest and generate Allure results
+      - name: Run tests with pytest and generate Allure results
+        run: |
+          pytest --alluredir=allure-results  # Specify the directory where results will be saved
          
       # Step 6: Generate the Allure report from the results
       - name: Generate Allure report
