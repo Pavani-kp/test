@@ -45,4 +45,4 @@ jobs:
       # Step 7: Extract summary from the Allure report data.json file
       - name: Extract Allure report summary
         run: |
-         allure serve allure-results
+         C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat serve allure-results
