@@ -27,7 +27,7 @@ jobs:
       - name: Clean up old allure results
         shell: pwsh
         run: |
-         Remove-Item -Recurse -Force "allure-results\*"
+         Remove-Item -Recurse -Force "C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure-results\*"
      
       - name: Install Scoop
         run: |
