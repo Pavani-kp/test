@@ -47,6 +47,6 @@ jobs:
         run: |
          cat allure-results/*.json | jq '.'
          cat allure-results/*.json | jq 'select(.status == "passed")' | wc -l
-
+         cat allure-results/*.json | jq '.status'
 
          
