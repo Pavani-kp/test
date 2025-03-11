@@ -45,6 +45,7 @@ jobs:
       # Step 7: Extract summary from the Allure report data.json file
       - name: Extract Allure report summary
         run: |
-         cat allure-results/*.json | jq '.[0]'
+         cat allure-results/*.json | jq '.'
+
 
          
