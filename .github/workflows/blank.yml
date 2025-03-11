@@ -46,6 +46,7 @@ jobs:
       - name: Extract Allure report summary
         run: |
          cat allure-results/*.json | jq '.'
+         cat allure-results/*.json | jq 'select(.status == "passed")' | wc -l
 
 
          
