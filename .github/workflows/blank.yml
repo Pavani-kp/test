@@ -24,7 +24,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest allure-pytest
           pip install -r requirements.txt
-
+      - name: Clean up old allure results
+        shell: pwsh
+        run: |
+         Remove-Item -Recurse -Force "allure-results\*"
+     
       - name: Install Scoop
         run: |
          Set-ExecutionPolicy RemoteSigned -scope CurrentUser
@@ -32,8 +36,6 @@ jobs:
          scoop install allure 
          echo $env:PATH 
          C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat --version
-      - name: Clean up old allure results
-        run: rm -rf allure-results/*
       - name: Run tests with pytest and generate Allure results
         run: |
           pytest --alluredir=allure-results  # Specify the directory where results will be saved
