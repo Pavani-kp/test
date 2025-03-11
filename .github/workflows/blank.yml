@@ -48,5 +48,17 @@ jobs:
          cat allure-results/*.json | jq '.'
          cat allure-results/*.json | jq 'select(.status == "passed")' | wc -l
          cat allure-results/*.json | jq '.status'
-         cat allure-results/*.json | jq 'select(.status == "passed")'
-         
+         # Count passed tests
+         passed_count=$(cat allure-results/*.json | jq 'select(.status == "passed")' | wc -l)
+
+         # Count failed tests
+         failed_count=$(cat allure-results/*.json | jq 'select(.status == "failed")' | wc -l)
+
+         # Count skipped tests
+         skipped_count=$(cat allure-results/*.json | jq 'select(.status == "skipped")' | wc -l)
+
+         # Print the results
+         echo "Passed tests: $passed_count"
+         echo "Failed tests: $failed_count"
+         echo "Skipped tests: $skipped_count"
+
