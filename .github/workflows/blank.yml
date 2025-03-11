@@ -45,4 +45,6 @@ jobs:
       # Step 7: Extract summary from the Allure report data.json file
       - name: Extract Allure report summary
         run: |
-         C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat serve allure-results
+         cat allure-results/*.json | jq '[.[] | select(.status == "passed")] | length'
+         cat allure-results/*.json | jq '[.[] | select(.status == "failed")] | length'
+         cat allure-results/*.json | jq '[.[] | select(.status == "skipped")] | length'
