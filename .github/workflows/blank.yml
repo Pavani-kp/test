@@ -35,7 +35,10 @@ jobs:
       - name: Run tests with pytest and generate Allure results
         run: |
           pytest --alluredir=allure-results  # Specify the directory where results will be saved
-         
+      - name: Clean gh-pages and copy new report
+        run: |
+         rm -rf gh-pages/*  # Clean the gh-pages directory
+         cp -r target/allure-report/* gh-pages/   
       # Step 6: Generate the Allure report from the results
       - name: Generate Allure report
         run: |
@@ -54,7 +57,7 @@ jobs:
         with:
          report_id: 'allure-reports'
          gh_pages: 'gh-pages'
-         report-dir: 'allure-results'
+         report_dir: 'allure-results'
          list_dirs: ${{ github.ref == 'refs/heads/main' }}
          branch_cleanup_enabled: ${{ github.ref == 'refs/heads/main' }}
          max_reports: 20
