@@ -51,6 +51,7 @@ jobs:
           ref: gh-pages
           path: gh-pages
       - name: Allure Report Action
+        id: allure
         uses: mgrybyk-org/allure-report-branch-js-action@v1
         if: always()
         continue-on-error: true
@@ -61,6 +62,9 @@ jobs:
          list_dirs: ${{ github.ref == 'refs/heads/main' }}
          branch_cleanup_enabled: ${{ github.ref == 'refs/heads/main' }}
          max_reports: 20
+      - name: Print the report URL
+        run: |
+          echo "The report URL is ${{ steps.allure.outputs.report_url }}"
       # Step 7: Extract summary from the Allure report data.json file
       - name: Extract Allure report summary
         run: |
