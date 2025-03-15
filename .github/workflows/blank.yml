@@ -66,22 +66,29 @@ jobs:
         if: always()
         run: |
           echo "The report URL is ${{ steps.allure.outputs.report_url }}"
-         # Capture and print the summary from the step
+        # Capture and print the summary from the step (Windows compatible)
       - name: Capture and print the summary
         if: always()  # This ensures it always runs
         run: |
           echo "Extracting and printing the step summary"
           
-          # Capture the summary of the previous step, or extract the log content directly
-          step_summary=$(cat $GITHUB_STEP_SUMMARY)
-          
-          # If there's a summary, print it
-          if [ -n "$step_summary" ]; then
-            echo "Step Summary: $step_summary"
-          else
-            echo "No summary found for the previous step."
-          fi
-      # Step 7: Extract summary from the Allure report data.json file
+          # Capture the summary of the previous step, or extract the log content directly (Windows)
+          powershell -Command "Get-Content $env:GITHUB_STEP_SUMMARY"
+
+          # If you want to store it in an environment variable (Windows-compatible way)
+          $step_summary = Get-Content $env:GITHUB_STEP_SUMMARY
+          if ($step_summary) {
+            Write-Host "Step Summary: $step_summary"
+            echo "SUMMARY=$step_summary" >> $env:GITHUB_ENV  # Store the summary in an environment variable
+          } else {
+            Write-Host "No summary found for the previous step."
+          }
+
+      # Print the captured Summary
+      - name: Print the captured Summary
+        if: always()  # This ensures it always runs
+        run: |
+          echo "The captured step summary is: ${{ env.SUMMARY }}"      # Step 7: Extract summary from the Allure report data.json file
       - name: Extract Allure report summary
         run: |
          cat allure-results/*.json | jq '.'
