@@ -66,6 +66,21 @@ jobs:
         if: always()
         run: |
           echo "The report URL is ${{ steps.allure.outputs.report_url }}"
+         # Capture and print the summary from the step
+      - name: Capture and print the summary
+        if: always()  # This ensures it always runs
+        run: |
+          echo "Extracting and printing the step summary"
+          
+          # Capture the summary of the previous step, or extract the log content directly
+          step_summary=$(cat $GITHUB_STEP_SUMMARY)
+          
+          # If there's a summary, print it
+          if [ -n "$step_summary" ]; then
+            echo "Step Summary: $step_summary"
+          else
+            echo "No summary found for the previous step."
+          fi
       # Step 7: Extract summary from the Allure report data.json file
       - name: Extract Allure report summary
         run: |
