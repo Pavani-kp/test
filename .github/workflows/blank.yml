@@ -63,6 +63,7 @@ jobs:
          branch_cleanup_enabled: ${{ github.ref == 'refs/heads/main' }}
          max_reports: 20
       - name: Print the report URL
+        if: always()
         run: |
           echo "The report URL is ${{ steps.allure.outputs.report_url }}"
       # Step 7: Extract summary from the Allure report data.json file
