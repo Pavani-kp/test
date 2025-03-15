@@ -40,7 +40,14 @@ jobs:
       - name: Generate Allure report
         run: |
           C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat generate allure-results --clean --output allure-report
-
+      - name: Get allure github
+        uses: actions/checkout@v2
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+      
       # Step 7: Extract summary from the Allure report data.json file
       - name: Extract Allure report summary
         run: |
