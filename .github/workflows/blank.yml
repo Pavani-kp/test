@@ -32,6 +32,11 @@ jobs:
          scoop install allure 
          echo $env:PATH 
          C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat --version
+      - name: Clean up any existing worktree
+        run: |
+          git worktree prune
+          git worktree remove gh-pages || echo "No existing gh-pages worktree"
+
       - name: Run tests with pytest and generate Allure results
         run: |
           pytest --alluredir=allure-results  # Specify the directory where results will be saved
