@@ -75,7 +75,7 @@ jobs:
           echo "$LINK" >> $env:GITHUB_STEP_SUMMARY
       - name: Parse Pass Count from Allure Results (JSON)
         run: |
-         python -c "
+          python -c "
           import json
           import os
           $results_file = os.path.join('allure-results', 'results.json')
