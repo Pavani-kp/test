@@ -76,8 +76,8 @@ jobs:
       - name: Parse Pass Count from Allure Results (JSON)
         run: |
          python -c "
-         import json
-         import os
+          import json
+          import os
           $results_file = os.path.join('allure-results', 'results.json')
           if os.path.exists(results_file):
            with open(results_file) as f:
