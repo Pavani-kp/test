@@ -102,7 +102,7 @@ jobs:
           result_file_path = os.path.join(results_dir, first_json_file)
 
           with open(result_file_path) as f:
-              results = json.load(f)
+              result_data = json.load(f)
         
           # Initialize the pass count
           pass_count = 0
