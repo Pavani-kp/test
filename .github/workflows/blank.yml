@@ -45,12 +45,8 @@ jobs:
           git fetch origin gh-pages || echo "No gh-pages branch exists"
           git checkout -b gh-pages || git checkout gh-pages  # Checkout or create gh-pages
 
-      # Step 6: Clean the gh-pages branch and copy the Allure report files
-      - name: Clean gh-pages and copy Allure report
-        run: |
-          git rm -rf .  # Remove existing files in gh-pages branch
-          xcopy /E /I /H allure-report\* .  # Copy Allure report files to the root
       - name: Allure Report Action
+        id: allure
         uses: mgrybyk-org/allure-report-branch-js-action@v1
         if: always()
         continue-on-error: true
