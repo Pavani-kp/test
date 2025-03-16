@@ -78,7 +78,7 @@ jobs:
           python -c "
           import json
           import os
-          $results_file = os.path.join('allure-results', 'results.json')
+          results_file = os.path.join('allure-results', 'results.json')
           if os.path.exists(results_file):
            with open(results_file) as f:
            results = json.load(f)
