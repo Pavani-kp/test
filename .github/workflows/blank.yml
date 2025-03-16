@@ -110,8 +110,8 @@ jobs:
           # Loop through the 'tests' in the result data and count the passed ones
           for test_case in result_data.get('testCaseResults', []):
           # Check if the test case status is 'passed'
-          if test_case.get('status') == 'passed':
-            pass_count += 1
+            if test_case.get('status') == 'passed':
+              pass_count += 1
           # Output the pass count
           print(f"Total passed tests in {first_json_file}: {pass_count}")
           " > count_passed_tests.py
