@@ -39,12 +39,7 @@ jobs:
       - name: Generate Allure report
         run: |
           C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat generate allure-results --clean --output allure-report
-       # Step 5: Create or checkout gh-pages branch
-      - name: Create or Checkout gh-pages branch
-        run: |
-          git fetch origin gh-pages || echo "No gh-pages branch exists"
-          git checkout -b gh-pages || git checkout gh-pages  # Checkout or create gh-pages
-
+      
       - name: Allure Report Action
         id: allure
         uses: mgrybyk-org/allure-report-branch-js-action@v1
@@ -68,6 +63,11 @@ jobs:
         if: always()
         run: |
           echo "The report URL is ${{ steps.allure.outputs.report_url }}"
+      # Step 5: Create or checkout gh-pages branch
+      - name: Create or Checkout gh-pages branch
+        run: |
+          git fetch origin gh-pages || echo "No gh-pages branch exists"
+          git checkout -b gh-pages || git checkout gh-pages  # Checkout or create gh-pages
 
 
 
