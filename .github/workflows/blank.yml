@@ -94,7 +94,7 @@ jobs:
 
           # Check if there are any result files
           if not json_files:
-            print("No result files found in allure-results.")
+            print(f'{results_file} does not exist.')
           else:
             # Get the first .json file
            first_json_file = json_files[0]  # This is the first file in the list
