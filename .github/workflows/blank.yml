@@ -58,7 +58,7 @@ jobs:
           git config user.email "actions@github.com"
           git add .
           git commit -m "Deploy Allure report to gh-pages" || echo "No changes to commit"
-          git push origin gh-pages --force  # Push changes to gh-pages branch
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} gh-pages --force
 
       # Step 8: Deploy to GitHub Pages (this step is not necessary if gh-pages branch is already serving content)
       - name: Deploy to GitHub Pages
