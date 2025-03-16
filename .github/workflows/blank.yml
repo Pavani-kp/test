@@ -68,9 +68,20 @@ jobs:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          publish_dir: ./allure-report  # Path to the generated Allure report directory
          branch: gh-pages  # The branch where the report will be deployed
-      - name: Parse Allure JSON Results
+      - name: Parse Pass Count from Allure Results (JSON)
         run: |
-          # Parse the results.json file to get the pass count
-          $json = Get-Content -Raw -Path allure-results/results.json | ConvertFrom-Json
-          $passCount = $json.tests | Where-Object { $_.status -eq 'passed' } | Measure-Object | Select-Object -ExpandProperty Count
-          echo "Pass count: $passCount"
+         python -c "
+         import json
+         import os
+
+         $results_file = os.path.join('allure-results', 'results.json')
+
+         if os.path.exists(results_file):
+          with open(results_file) as f:
+          results = json.load(f)
+        
+          pass_count = sum(1 for test in results['tests'] if test['status'] == 'passed')
+    
+          print(f'Pass count: {pass_count}')
+          else:
+          print(f'{results_file} does not exist.')
