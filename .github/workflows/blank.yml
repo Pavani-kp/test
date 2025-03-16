@@ -56,7 +56,6 @@ jobs:
         continue-on-error: true
         with:
          report_id: 'allure-reports'
-         gh_pages: 'gh-pages'
          report_dir: 'allure-results'
          list_dirs: ${{ github.ref == 'refs/heads/main' }}
          branch_cleanup_enabled: ${{ github.ref == 'refs/heads/main' }}
