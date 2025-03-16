@@ -73,6 +73,9 @@ jobs:
           $LINK = "https://pavani-kp.github.io/test/"
           echo "Allure Results" >> $env:GITHUB_STEP_SUMMARY
           echo "$LINK" >> $env:GITHUB_STEP_SUMMARY
+      - name: List allure-results directory
+        run: |
+          dir allure-results
       - name: Parse Pass Count from Allure Results (JSON)
         run: |
           python -c "
