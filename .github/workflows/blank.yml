@@ -39,80 +39,32 @@ jobs:
       - name: Generate Allure report
         run: |
           C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat generate allure-results --clean --output allure-report
-      - name: Get allure github
-        uses: actions/checkout@v2
-        if: always()
-        continue-on-error: true
+       # Step 5: Create or checkout gh-pages branch
+      - name: Create or Checkout gh-pages branch
+        run: |
+          git fetch origin gh-pages || echo "No gh-pages branch exists"
+          git checkout -b gh-pages || git checkout gh-pages  # Checkout or create gh-pages
+
+      # Step 6: Clean the gh-pages branch and copy the Allure report files
+      - name: Clean gh-pages and copy Allure report
+        run: |
+          git rm -rf .  # Remove existing files in gh-pages branch
+          xcopy /E /I /H allure-report\* .  # Copy Allure report files to the root
+
+      # Step 7: Commit and push changes to gh-pages
+      - name: Commit and push to gh-pages branch
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Deploy Allure report to gh-pages" || echo "No changes to commit"
+          git push origin gh-pages --force  # Push changes to gh-pages branch
+
+      # Step 8: Deploy to GitHub Pages (this step is not necessary if gh-pages branch is already serving content)
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          ref: gh-pages
-          path: gh-pages
-      - name: Allure Report Action
-        id: allure
-        uses: mgrybyk-org/allure-report-branch-js-action@v1
-        if: always()
-        continue-on-error: true
-        with:
-         report_id: 'allure-reports'
-         gh_pages: 'gh-pages'
-         report_dir: 'allure-results'
-         list_dirs: ${{ github.ref == 'refs/heads/main' }}
-         branch_cleanup_enabled: ${{ github.ref == 'refs/heads/main' }}
-         max_reports: 20
-      - name: Print the report URL
-        if: always()
-        run: |
-          echo "The report URL is ${{ steps.allure.outputs.report_url }}"
-         # Download the Allure report from GitHub Pages
-      - name: Download Allure Report from GitHub Pages
-        if: always()
-        run: |
-          # Define the URL of the GitHub Pages site hosting the Allure report
-          $allure_report_url = "${{ steps.allure.outputs.report_url }}"
-          
-          # Use Invoke-WebRequest to download the allure-data.json file
-          Invoke-WebRequest -Uri "$allure_report_url/data/allure-data.json" -OutFile "allure-data.json"
-
-      # Parse the allure-data.json to get the pass count
-      - name: Parse the Allure Report JSON
-        run: |
-          # Read the JSON file and extract the pass count using PowerShell
-          $allure_data = Get-Content -Path "allure-data.json" | ConvertFrom-Json
-
-          # Get the pass count (length of the 'passes' array)
-          $pass_count = $allure_data.passes.Count
-
-          # Output the pass count
-          Write-Host "Pass Count: $pass_count"
-          
-          # Store the pass count as an environment variable
-          echo "PASS_COUNT=$pass_count" >> $env:GITHUB_ENV
-
-      # Print the captured Pass Count
-      - name: Print Pass Count
-        run: |
-          echo "The pass count is: ${{ env.PASS_COUNT }}"
-
-      # Print the captured Summary
-      - name: Print the captured Summary
-        if: always()  # This ensures it always runs
-        run: |
-          echo "The captured step summary is: ${{ env.SUMMARY }}"      # Step 7: Extract summary from the Allure report data.json file
-      - name: Extract Allure report summary
-        run: |
-         cat allure-results/*.json | jq '.'
-         cat allure-results/*.json | jq 'select(.status == "passed")' | wc -l
-         cat allure-results/*.json | jq '.status'
-         # Count passed tests
-         $passed_count=$(cat allure-results/*.json | jq 'select(.status == "passed")' | wc -l)
-
-         # Count failed tests
-         $failed_count=$(cat allure-results/*.json | jq 'select(.status == "failed")' | wc -l)
-
-         # Count skipped tests
-         $skipped_count=$(cat allure-results/*.json | jq 'select(.status == "skipped")' | wc -l)
-
-         # Print the results
-         echo "Passed tests: $passed_count"
-         echo "Failed tests: $failed_count"
-         echo "Skipped tests: $skipped_count"
-
+          branch: gh-pages  # Deploy to the gh-pages branch
+          folder: .  # Deploy everything in the root (where Allure report files are)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub token for authentication
