@@ -50,7 +50,17 @@ jobs:
         run: |
           git rm -rf .  # Remove existing files in gh-pages branch
           xcopy /E /I /H allure-report\* .  # Copy Allure report files to the root
-
+      - name: Allure Report Action
+        uses: mgrybyk-org/allure-report-branch-js-action@v1
+        if: always()
+        continue-on-error: true
+        with:
+         report_id: 'allure-reports'
+         gh_pages: 'gh-pages'
+         report_dir: 'allure-results'
+         list_dirs: ${{ github.ref == 'refs/heads/main' }}
+         branch_cleanup_enabled: ${{ github.ref == 'refs/heads/main' }}
+         max_reports: 20
       # Step 7: Commit and push changes to gh-pages
       - name: Commit and push to gh-pages branch
         run: |
@@ -59,12 +69,11 @@ jobs:
           git add .
           git commit -m "Deploy Allure report to gh-pages" || echo "No changes to commit"
           git push origin gh-pages --force
+      - name: Print the report URL
+        if: always()
+        run: |
+          echo "The report URL is ${{ steps.allure.outputs.report_url }}"
 
-      # Step 8: Deploy to GitHub Pages (this step is not necessary if gh-pages branch is already serving content)
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages  # Deploy to the gh-pages branch
-          folder: .  # Deploy everything in the root (where Allure report files are)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub token for authentication
+
+
+     
