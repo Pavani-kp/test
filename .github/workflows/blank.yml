@@ -66,23 +66,35 @@ jobs:
         if: always()
         run: |
           echo "The report URL is ${{ steps.allure.outputs.report_url }}"
-        # Capture and print the summary from the step (Windows compatible)
-      - name: Capture and print the summary
-        if: always()  # This ensures it always runs
+         # Download the Allure report from GitHub Pages
+      - name: Download Allure Report from GitHub Pages
+        if: always()
         run: |
-          echo "Extracting and printing the step summary"
+          # Define the URL of the GitHub Pages site hosting the Allure report
+          $allure_report_url = "${{ steps.allure.outputs.report_url }}"
           
-          # Capture the summary of the previous step, or extract the log content directly (Windows)
-          powershell -Command "Get-Content $env:GITHUB_STEP_SUMMARY"
+          # Use Invoke-WebRequest to download the allure-data.json file
+          Invoke-WebRequest -Uri "$allure_report_url/data/allure-data.json" -OutFile "allure-data.json"
 
-          # If you want to store it in an environment variable (Windows-compatible way)
-          $step_summary = Get-Content $env:GITHUB_STEP_SUMMARY
-          if ($step_summary) {
-            Write-Host "Step Summary: $step_summary"
-            echo "SUMMARY=$step_summary" >> $env:GITHUB_ENV  # Store the summary in an environment variable
-          } else {
-            Write-Host "No summary found for the previous step."
-          }
+      # Parse the allure-data.json to get the pass count
+      - name: Parse the Allure Report JSON
+        run: |
+          # Read the JSON file and extract the pass count using PowerShell
+          $allure_data = Get-Content -Path "allure-data.json" | ConvertFrom-Json
+
+          # Get the pass count (length of the 'passes' array)
+          $pass_count = $allure_data.passes.Count
+
+          # Output the pass count
+          Write-Host "Pass Count: $pass_count"
+          
+          # Store the pass count as an environment variable
+          echo "PASS_COUNT=$pass_count" >> $env:GITHUB_ENV
+
+      # Print the captured Pass Count
+      - name: Print Pass Count
+        run: |
+          echo "The pass count is: ${{ env.PASS_COUNT }}"
 
       # Print the captured Summary
       - name: Print the captured Summary
