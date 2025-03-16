@@ -79,7 +79,7 @@ jobs:
       - name: Parse the First Allure Result File
         run: |
           # PowerShell script to run the Python code
-          $pythonScript = @"
+          python -c "
           import json
           import os
 
