@@ -32,10 +32,6 @@ jobs:
          scoop install allure 
          echo $env:PATH 
          C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat --version
-    # Step 1: Install rsync using Scoop (a Windows package manager)
-      - name: Install rsync
-        run: |
-         scoop install rsync
       - name: Run tests with pytest and generate Allure results
         run: |
           pytest --alluredir=allure-results  # Specify the directory where results will be saved
