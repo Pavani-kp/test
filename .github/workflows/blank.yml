@@ -47,10 +47,6 @@ jobs:
         with:
          name: allure-results
 
-      - name: Install Allure on Windows
-        run: |
-         choco install allure  # Install Allure via Chocolatey
-
       - name: Generate Allure Report
         run: |
          allure generate allure-results --clean -o allure-report  
