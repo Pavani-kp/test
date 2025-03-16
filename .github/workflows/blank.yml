@@ -105,9 +105,7 @@ jobs:
           with open(results_file) as f:
               results = json.load(f)
         
-            pass_count = sum(1 for test in results['tests'] if test['status'] == 'passed')
+          pass_count = sum(1 for test in results['tests'] if test['status'] == 'passed')
     
-            print(f'Pass count: {pass_count}')
-          else:
-            print(f'{results_file} does not exist.')
-              "
+          print(f'Pass count: {pass_count}')
+            "
