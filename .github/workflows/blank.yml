@@ -68,6 +68,11 @@ jobs:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          publish_dir: ./allure-report  # Path to the generated Allure report directory
          branch: gh-pages  # The branch where the report will be deployed
+      - name: Post summary with build number
+        run: |
+          $LINK = "https://pavani-kp.github.io/test/"
+          echo "Allure Results" >> $env:GITHUB_STEP_SUMMARY
+          echo "$LINK" >> $env:GITHUB_STEP_SUMMARY
       - name: Parse Pass Count from Allure Results (JSON)
         run: |
          python -c "
