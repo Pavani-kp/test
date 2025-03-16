@@ -105,7 +105,13 @@ jobs:
           with open(result_file_path) as f:
               results = json.load(f)
         
-          pass_count = sum(1 for test in results['tests'] if test['status'] == 'passed')
-    
-          print(f'Pass count: {pass_count}')
-            "
+          # Initialize the pass count
+          pass_count = 0
+
+          # Loop through the 'tests' in the result data and count the passed ones
+          for test_case in result_data.get('testCaseResults', []):
+          # Check if the test case status is 'passed'
+          if test_case.get('status') == 'passed':
+            pass_count += 1
+          # Output the pass count
+          print(f"Total passed tests in {first_json_file}: {pass_count}")"
