@@ -68,3 +68,9 @@ jobs:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          publish_dir: ./allure-report  # Path to the generated Allure report directory
          branch: gh-pages  # The branch where the report will be deployed
+      - name: Parse Allure JSON Results
+        run: |
+          # Parse the results.json file to get the pass count
+          $json = Get-Content -Raw -Path allure-results/results.json | ConvertFrom-Json
+          $passCount = $json.tests | Where-Object { $_.status -eq 'passed' } | Measure-Object | Select-Object -ExpandProperty Count
+          echo "Pass count: $passCount"
