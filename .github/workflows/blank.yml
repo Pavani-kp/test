@@ -78,6 +78,7 @@ jobs:
           dir allure-results
       - name: Parse the First Allure Result File
         run: |
+          echo "
           # PowerShell script to run the Python code
           python -c "
           import json
@@ -114,4 +115,8 @@ jobs:
           if test_case.get('status') == 'passed':
             pass_count += 1
           # Output the pass count
-          print(f"Total passed tests in {first_json_file}: {pass_count}")"
+          print(f"Total passed tests in {first_json_file}: {pass_count}")
+          " > count_passed_tests.py
+
+      - name: Run Python script to count passed tests
+        run: python count_passed_tests.py
