@@ -72,7 +72,7 @@ jobs:
           print(f"Test Pass Count: {pass_count}")
           print(f"Test Fail Count: {fail_count}")
           print(f"Test Skip Count: {skip_count}")
-            "@
+          "@
 
           # Run the Python script to extract the pass, fail, and skip counts
           echo $python_script | python
