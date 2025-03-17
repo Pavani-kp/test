@@ -32,89 +32,47 @@ jobs:
          scoop install allure 
          echo $env:PATH 
          C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat --version
-      - name: Run tests with pytest and generate Allure results
+      - name: Scrape Allure Report for Pass, Fail, and Skip Counts
         run: |
-          pytest --alluredir=allure-results  # Specify the directory where results will be saved
-        # Step 6: Generate the Allure report from the results
-      - name: Upload Allure Results as artifact
-        uses: actions/upload-artifact@v4
-        with:
-         name: allure-results
-         path: allure-results/
+          # Install Python (if not already installed)
+          choco install python --version 3.9.7 --yes
 
-      - name: Download Allure Results
-        uses: actions/download-artifact@v4
-        with:
-         name: allure-results
-
-      - name: Generate Allure Report
-        run: |
-         C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat generate allure-results --clean -o allure-report  
-
-      - name: Upload Allure Report as artifact
-        uses: actions/upload-artifact@v4
-        with:
-         name: allure-report
-         path: allure-report/
-
-      - name: Download Allure Report
-        uses: actions/download-artifact@v4
-        with:
-         name: allure-report
-
-      - name: Deploy Allure Report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-         publish_dir: ./allure-report  # Path to the generated Allure report directory
-         branch: gh-pages  # The branch where the report will be deployed
-      - name: Post summary with build number
-        run: |
-          $LINK = "https://pavani-kp.github.io/test/"
-          echo "Allure Results" >> $env:GITHUB_STEP_SUMMARY
-          echo "$LINK" >> $env:GITHUB_STEP_SUMMARY
-      - name: List allure-results directory
-        run: |
-          dir allure-results
-      - name: Parse the First Allure Result File
-        run: |
-          echo "
-          import json
-          import os
-
-          # Directory where the allure results are stored
-          results_dir = 'allure-results'
-
-          # List all files in the allure-results directory
-          all_files = os.listdir(results_dir)
-
-          # Filter out only the .json files (result files)
-          json_files = [f for f in all_files if f.endswith('-result.json')]
-
-          # Check if there are any result files
-          if not json_files:
-            print(f'{results_file} does not exist.')
-          else:
-            # Get the first .json file
-           first_json_file = json_files[0]  # This is the first file in the list
-
-          # Path to the first .json result file
-          result_file_path = os.path.join(results_dir, first_json_file)
-
-          with open(result_file_path) as f:
-              result_data = json.load(f)
+          # Install required libraries
+          python -m pip install requests beautifulsoup4
         
-          # Initialize the pass count
+          # URL of the Allure report hosted on GitHub Pages
+          $url = "https://pavani-kp.github.io/test/index.html"
+
+          # Python script to scrape and extract the pass, fail, and skip counts from the hosted Allure report
+          $python_script = @"
+          import requests
+          from bs4 import BeautifulSoup
+
+          # Fetch the HTML content of the Allure report page
+          response = requests.get('$url')
+          soup = BeautifulSoup(response.text, 'html.parser')
+
+          # Extract pass, fail, and skip counts from the report summary
           pass_count = 0
+          fail_count = 0
+          skip_count = 0
 
-          # Loop through the 'tests' in the result data and count the passed ones
-          for test_case in result_data.get('testCaseResults', []):
-          # Check if the test case status is 'passed'
-            if test_case.get('status') == 'passed':
-              pass_count += 1
-          # Output the pass count
-          print(f'Total passed tests in {first_json_file}: {pass_count}')
-          " > count_passed_tests.py
+          # Find the elements that contain the pass, fail, and skip counts (these may vary based on your report structure)
+          pass_element = soup.find('div', class_='allure-summary-passed')  # Update this class based on your report structure
+          fail_element = soup.find('div', class_='allure-summary-failed')  # Update this class based on your report structure
+          skip_element = soup.find('div', class_='allure-summary-skipped')  # Update this class based on your report structure
 
-      - name: Run Python script to count passed tests
-        run: python count_passed_tests.py
+          if pass_element:
+            pass_count = int(pass_element.text.strip().split()[0])  # Extract the number from the text
+          if fail_element:
+            fail_count = int(fail_element.text.strip().split()[0])  # Extract the number from the text
+          if skip_element:
+            skip_count = int(skip_element.text.strip().split()[0])  # Extract the number from the text
+
+          print(f"Test Pass Count: {pass_count}")
+          print(f"Test Fail Count: {fail_count}")
+          print(f"Test Skip Count: {skip_count}")
+            "@
+
+          # Run the Python script to extract the pass, fail, and skip counts
+          echo $python_script | python
