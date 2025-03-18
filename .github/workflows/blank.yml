@@ -34,9 +34,6 @@ jobs:
          C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat --version
       - name: Scrape Allure Report for Pass, Fail, and Skip Counts
         run: |
-          # Install Python (if not already installed)
-          choco install python --version 3.9.7 --yes
-
           # Install required libraries
           python -m pip install requests beautifulsoup4
         
