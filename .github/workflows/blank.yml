@@ -42,6 +42,7 @@ jobs:
 
       - name: Parse Allure results to get pass count
         run: |
+          $env:Path="C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\"
           $passCount = 0
           $allureResultFiles = Get-ChildItem -Path "allure-results" -Recurse -Filter "*.xml"
           
