@@ -58,12 +58,11 @@ jobs:
           skip_count = 0
 
           all_summary_elements = soup.find_all("div", class_="bar__fill bar__fill_status_passed")
-
+          print(f"Found {len(all_summary_elements)} 'Passed' elements.")
           # Check if we can find the "Passed" count (assuming this is the format of the result)
           for element in all_summary_elements:
             if 'Passed' in element.text:
               pass_count = int(element.text.strip().split(":")[1].strip())
-              echo "$element.text"
           # Find the elements that contain the pass, fail, and skip counts (these may vary based on your report structure)
           fail_element = soup.find('div', class_='bar__fill bar__fill_status_failed')  # Update this class based on your report structure
           skip_element = soup.find('div', class_='bar__fill bar__fill_status_skipped')  # Update this class based on your report structure
