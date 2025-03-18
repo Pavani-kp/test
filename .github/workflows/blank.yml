@@ -57,7 +57,7 @@ jobs:
           fail_count = 0
           skip_count = 0
 
-          all_summary_elements = soup.find_all("div", class_="bar__fill bar__fill_status_passed")
+          all_summary_elements = soup.find_all("div", class_="allure-summary-passed")
           print(f"Found {len(all_summary_elements)} 'Passed' elements.")
           # Check if we can find the "Passed" count (assuming this is the format of the result)
           for element in all_summary_elements:
