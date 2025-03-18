@@ -40,22 +40,21 @@ jobs:
         run: |
           C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat generate allure-results --clean --output allure-report
 
-      # Step 7: Extract summary from the Allure report data.json file
-      - name: Extract Allure report summary
+      - name: Parse Allure results to get pass count
         run: |
-         cat allure-results/*.json | jq '.'
-         cat allure-results/*.json | jq 'select(.status == "passed")' | wc -l
-         cat allure-results/*.json | jq '.status'
-         # Count passed tests
-         $passed_count=$(cat allure-results/*.json | jq 'select(.status == "passed")' | wc -l)
+          $passCount = 0
+          $allureResultFiles = Get-ChildItem -Path "allure-results" -Recurse -Filter "*.xml"
+          
+          foreach ($file in $allureResultFiles) {
+              [xml]$xmlContent = Get-Content $file.FullName
+              $passCount += ($xmlContent.testsuite.testcase | Where-Object { $_.status -eq "passed" }).Count
+          }
 
-         # Count failed tests
-         $failed_count=$(cat allure-results/*.json | jq 'select(.status == "failed")' | wc -l)
-
-         # Count skipped tests
-         $skipped_count=$(cat allure-results/*.json | jq 'select(.status == "skipped")' | wc -l)
-
-         # Print the results
-         echo "Passed tests: $passed_count"
-         echo "Failed tests: $failed_count"
-         echo "Skipped tests: $skipped_count"
+          Write-Output "Total Passed Tests: $passCount"
+          
+          # Store the pass count as a GitHub Actions output
+          echo "pass_count=$passCount" >> $GITHUB_ENV
+          
+      - name: Output Pass Count
+        run: |
+          echo "Pass count: ${{ env.pass_count }}"
