@@ -42,10 +42,10 @@ jobs:
       - name: List files in the folder
         run: |
           # Specify the path to the folder (you can use the path to your allure-results folder here)
-          $folderPath = "C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure-results"
+          $allureResultsPath = "$(pwd)\allure-results"
 
           # List all files in the folder
-          Write-Host "Listing files in folder: $folderPath"
+          Write-Host "Listing files in folder: $allureResultsPath"
           Get-ChildItem -Path $folderPath -Recurse | ForEach-Object { Write-Host $_.FullName }
       - name: Parse Allure results to get pass count
         run: |
