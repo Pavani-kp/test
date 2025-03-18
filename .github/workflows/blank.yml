@@ -39,7 +39,14 @@ jobs:
       - name: Generate Allure report
         run: |
           C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure.bat generate allure-results --clean --output allure-report
+      - name: List files in the folder
+        run: |
+          # Specify the path to the folder (you can use the path to your allure-results folder here)
+          $folderPath = "C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\allure-results"
 
+          # List all files in the folder
+          Write-Host "Listing files in folder: $folderPath"
+          Get-ChildItem -Path $folderPath -Recurse | ForEach-Object { Write-Host $_.FullName }
       - name: Parse Allure results to get pass count
         run: |
           $env:Path="C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\"
