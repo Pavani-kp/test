@@ -58,9 +58,9 @@ jobs:
           skip_count = 0
 
           # Find the elements that contain the pass, fail, and skip counts (these may vary based on your report structure)
-          pass_element = soup.find('path', class_='chart__arc chart__fill_status_passed')  # Update this class based on your report structure
-          fail_element = soup.find('path', class_='chart__arc chart__fill_status_failed')  # Update this class based on your report structure
-          skip_element = soup.find('path', class_='chart__arc chart__fill_status_skipped')  # Update this class based on your report structure
+          pass_element = soup.find('div', class_='bar__fill bar__fill_status_passed')  # Update this class based on your report structure
+          fail_element = soup.find('div', class_='bar__fill bar__fill_status_failed')  # Update this class based on your report structure
+          skip_element = soup.find('div', class_='bar__fill bar__fill_status_skipped')  # Update this class based on your report structure
 
           if pass_element:
             pass_count = int(pass_element.text.strip().split()[0])  # Extract the number from the text
