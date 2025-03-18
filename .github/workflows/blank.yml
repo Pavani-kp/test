@@ -48,6 +48,9 @@ jobs:
           # Fetch the HTML content of the Allure report page
           response = requests.get('$url')
           soup = BeautifulSoup(response.text, 'html.parser')
+          # Debugging: Print out the first 500 characters of the HTML to understand the structure
+          print("HTML Content (First 500 characters):")
+          print(response.text[:500])
 
           # Extract pass, fail, and skip counts from the report summary
           pass_count = 0
