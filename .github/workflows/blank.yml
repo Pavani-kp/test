@@ -63,7 +63,7 @@ jobs:
               
               # Load the content of the JSON file
               $jsonContent = Get-Content -Path $file.FullName | ConvertFrom-Json
-
+              echo $jsonContent
               # Loop through the tests in the JSON file
               foreach ($test in $jsonContent.tests) {
                   echo $test.status
