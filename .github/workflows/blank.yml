@@ -66,6 +66,7 @@ jobs:
 
               # Loop through the tests in the JSON file
               foreach ($test in $jsonContent.tests) {
+                  echo $test.status
                   # Check if the test status is 'passed'
                   if ($test.status -eq "passed") {
                       $passCount++
