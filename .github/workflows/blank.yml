@@ -46,12 +46,11 @@ jobs:
 
           # List all files in the folder
           Write-Host "Listing files in folder: $allureResultsPath"
-          Get-ChildItem -Path $folderPath -Recurse | ForEach-Object { Write-Host $_.FullName }
+          
       - name: Parse Allure results to get pass count
         run: |
-          $env:Path="C:\Users\runneradmin\scoop\apps\allure\2.33.0\bin\"
           $passCount = 0
-          $allureResultFiles = Get-ChildItem -Path "allure-results" -Recurse -Filter "*.xml"
+          $allureResultFiles = Get-ChildItem -$allureResultsPath "allure-results" -Recurse -Filter "*.xml"
           
           foreach ($file in $allureResultFiles) {
               [xml]$xmlContent = Get-Content $file.FullName
