@@ -65,7 +65,7 @@ jobs:
               $jsonContent = Get-Content -Path $file.FullName | ConvertFrom-Json
               echo $jsonContent
               # Loop through the tests in the JSON file
-              foreach ($test in $jsonContent.tests) {
+              foreach ($test in $jsonContent) {
                   echo $test.status
                   # Check if the test status is 'passed'
                   if ($test.status -eq "passed") {
