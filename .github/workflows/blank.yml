@@ -58,7 +58,3 @@ jobs:
               }
           }
          Write-Host "Total Passed Tests:$passCount"
-          
-      - name: Output Pass Count
-        run: |
-          echo "Pass count: ${{ env.pass_count }}"
