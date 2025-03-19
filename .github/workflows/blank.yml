@@ -50,7 +50,7 @@ jobs:
       - name: Parse Allure results to get pass count
         run: |
           $passCount = 0
-          $allureResultFiles = Get-ChildItem -Path $allureResultsPath -Recurse -Filter "*.xml"
+          $allureResultFiles = Get-ChildItem -Path $allureResultsPath -Recurse -Filter "*-result.json"
           
           foreach ($file in $allureResultFiles) {
               [xml]$xmlContent = Get-Content $file.FullName
