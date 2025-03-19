@@ -54,6 +54,7 @@ jobs:
           
           foreach ($file in $allureResultFiles) {
               [xml]$xmlContent = Get-Content $file.FullName
+              echo $file.FullName
               $passCount += ($xmlContent.testsuite.testcase | Where-Object { $_.status -eq "passed" }).Count
           }
 
