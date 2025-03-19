@@ -46,7 +46,7 @@ jobs:
 
           # List all files in the folder
           Write-Host "Listing files in folder: $allureResultsPath"
-          
+          Get-ChildItem -Path $folderPath -Recurse
       - name: Parse Allure results to get pass count
         run: |
           $passCount = 0
