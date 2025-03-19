@@ -43,11 +43,21 @@ jobs:
         run: |
           # Specify the path to the folder (you can use the path to your allure-results folder here)
           $allureResultsPath = "$(pwd)\allure-results\"
-
+          $passCount = 0
           # List all files in the folder
           Write-Host "Listing files in folder: $allureResultsPath"
           Get-ChildItem -Path "D:\a\test\test\allure-results\" -Recurse
       - name: Parse Allure results to get pass count
+         $jsonFiles = Get-ChildItem -Path $allureResultsPath -Recurse -Filter "*.json"
+         foreach ($file in $jsonFiles) {
+           $jsonContent = Get-Content -Path $file.FullName | ConvertFrom-Json
+              foreach ($test in $jsonContent.tests) {
+                  if ($test.status -eq "passed") {
+                      $passCount++
+                  }
+              }
+          }
+         Write-Host "Total Passed Tests:$passCount"
         run: |
           $passCount = 0
           $allureResultFiles = Get-ChildItem -Path $allureResultsPath -Recurse -Filter "*-result.json"
