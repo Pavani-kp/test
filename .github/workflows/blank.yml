@@ -58,20 +58,6 @@ jobs:
               }
           }
          Write-Host "Total Passed Tests:$passCount"
-        run: |
-          $passCount = 0
-          $allureResultFiles = Get-ChildItem -Path $allureResultsPath -Recurse -Filter "*-result.json"
-          
-          foreach ($file in $allureResultFiles) {
-              [xml]$xmlContent = Get-Content $file.FullName
-              echo $file.FullName
-              $passCount += ($xmlContent.testsuite.testcase | Where-Object { $_.status -eq "passed" }).Count
-          }
-
-          Write-Output "Total Passed Tests: $passCount"
-          
-          # Store the pass count as a GitHub Actions output
-          echo "pass_count=$passCount" >> $GITHUB_ENV
           
       - name: Output Pass Count
         run: |
