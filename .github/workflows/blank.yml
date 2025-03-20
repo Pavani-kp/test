@@ -80,6 +80,7 @@ jobs:
       - name: print
         run: |
          $env:MESSAGE=@"
+         TestSuite : "Test"
          Pass : $env:PassCount
          Job : ${{ github.job }}
          "@
