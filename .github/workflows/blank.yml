@@ -81,6 +81,6 @@ jobs:
       - name: print
         run: |
          $env:MESSAGE=@"
-         Pass : $env:PassCount
+         Pass : $($env:PassCount)
          "@
          Write-Host "Message to Teams: $env:MESSAGE"
