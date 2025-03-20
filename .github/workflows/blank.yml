@@ -81,5 +81,6 @@ jobs:
         run: |
          $env:MESSAGE=@"
          Pass : $env:PassCount
+         Job : ${{ github.job }}
          "@
          Write-Host "Message to Teams: $env:MESSAGE"
