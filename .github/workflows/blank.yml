@@ -77,7 +77,7 @@ jobs:
           # Output the number of passed tests
           Write-Host "Total Passed Tests: $passCount"
           $env:PassCount = $passCount
-          
+          Write-Host "Testing: $($env:PassCount)"
       - name: print
         run: |
          $env:MESSAGE=@"
