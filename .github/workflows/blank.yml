@@ -76,11 +76,10 @@ jobs:
 
           # Output the number of passed tests
           Write-Host "Total Passed Tests: $passCount"
-          $env:PassCount = $passCount
-          Write-Host "Testing: $($env:PassCount)"
+          echo "PassCount=$passCount" >> $env:GITHUB_ENV
       - name: print
         run: |
          $env:MESSAGE=@"
-         Pass : $($env:PassCount)
+         Pass : $env:PassCount
          "@
          Write-Host "Message to Teams: $env:MESSAGE"
