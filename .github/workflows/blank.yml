@@ -89,8 +89,7 @@ jobs:
          Write-Host "$jsonBody"
          # Original URL
          # Extract the branch name from GITHUB_REF
-         $ref = $env:GITHUB_REF
-         $branchName = $ref.Substring($ref.LastIndexOf('/') + 1)
+         $branchName = $env:GITHUB_REF.Substring($ref.LastIndexOf('/') + 1)
 
          $url = "https://fuzzy-bassoon.github.io/allure-action/$branchName"
          Write-Host "$url"
