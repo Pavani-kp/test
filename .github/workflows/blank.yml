@@ -87,6 +87,7 @@ jobs:
          Write-Host "Message to Teams: $env:MESSAGE"
          $jsonBody = "{`"text`": `"$($env:MESSAGE)`"}"
          Write-Host "$jsonBody"
+         $customName = "TestResults"
          $longurl = "https://ncrvoyix-swt-cfr.github.ip/nextgenfuel-bdd-automation/allure-action/efs-7339_bddsmoketestrestultstoteams/allure-reports/140000987898_8977878787878"
-         $shortenedUrl = Invoke-WebRequest -Uri "https://is.gd/create.php?format=simple&url=$longurl"
+         $shortenedUrl = Invoke-WebRequest -Uri "https://is.gd/create.php?format=simple&url=$longUrl&shorturl=$customName"
          Write-Host $shortenedUrl
