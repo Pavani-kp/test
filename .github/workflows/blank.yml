@@ -85,5 +85,5 @@ jobs:
          Job : ${{ github.job }}
          "@
          Write-Host "Message to Teams: $env:MESSAGE"
-         $jsonBody = "{`"text`": `"$($message)`"}"
+         $jsonBody = "{`"text`": `"$($env:MESSAGE)`"}"
          Write-Host "$jsonBody"
