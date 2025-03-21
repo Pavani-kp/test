@@ -88,5 +88,9 @@ jobs:
          $jsonBody = "{`"text`": `"$($env:MESSAGE)`"}"
          Write-Host "$jsonBody"
          # Original URL
-         $url = "https://fuzzy-bassoon.github.io/allure-action/${GITHUB_REF##*/}"
+         # Extract the branch name from GITHUB_REF
+         $ref = $env:GITHUB_REF
+         $branchName = $ref.Substring($ref.LastIndexOf('/') + 1)
+
+         $url = "https://fuzzy-bassoon.github.io/allure-action/$branchName"
          Write-Host "$url"
